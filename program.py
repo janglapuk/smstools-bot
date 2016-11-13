@@ -2,6 +2,7 @@
 
 __author__ = 'TRA'
 
+import sys, os
 import mount_point
 import spf
 
@@ -18,8 +19,20 @@ class SmsBot:
     for plugin in self.bot_plugins:
       retval = plugin.is_runnable()
       print(plugin, '=> runnable and loaded!')
-      pass
 
 if __name__ == '__main__':
-  prog = SmsBot('RECEIVED', 'example/incoming_1.sms')
+  if len(sys.argv) != 3:
+    print('Usage: %s <[SENT|RECEIVED|FAILED|REPORT]> <path/to/sms/file>' % (sys.argv[0]))
+    exit(-1)
+
+  if not os.path.isfile(sys.argv[2]):
+    print('File \'%s\' is not exist.' % (sys.argv[2]))
+    exit(-2)
+
+  event = sys.argv[1]
+  file  = sys.argv[2]
+  
+  prog  = SmsBot(event, file)
   prog.main()
+
+  exit(0)

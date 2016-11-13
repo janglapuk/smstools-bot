@@ -4,6 +4,7 @@ __author__ = 'TRA'
 import mount_point as mp
 import smstools as st
 import re
+import config
 
 class StupidBot(mp.Bot):
   # This bot for RECEIVED only
@@ -15,6 +16,10 @@ class StupidBot(mp.Bot):
   def run(self):
     headers = self.get_headers()
     body = self.get_body()
+
+    if headers is None or body is None:
+      print('Headers or body is None', headers, body)
+      return False
 
     # Balance check
     balance = body.lower() == '!cekpulsa'
@@ -32,9 +37,11 @@ class StupidBot(mp.Bot):
       # Forward to registered number for unformatted messages
       self.forward_sms(body)
 
+    return True
+
   def balance_check(self):
     s = st.send_sms('555', 'PULSA', 'balance')
-    print('balance_check', s)
+    #print('balance_check')
 
   def bulk_sms(self, groups):
     addresses = groups[1].split(',')
@@ -42,11 +49,12 @@ class StupidBot(mp.Bot):
     
     for address in addresses:
       if address == '':
-        # Skip wrong address
-        continue 
+        continue # Skip wrong address
 
-      print(address)
-    pass
+      st.send_sms(address, message, 'bulk')
 
-  def forward_sms(self, body):
+  def forward_sms(self, message):
+    addresses = config.FORWARD_TO
+    for address in addresses:
+      st.send_sms(address, message, 'forward')
     pass
