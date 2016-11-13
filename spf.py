@@ -51,6 +51,8 @@ class ExtensionsAt(object):
         return [p(instance) for p in self.mount.plugins]
 
 PLUGIN_DIRECTORY = "plugins"
+PLUGIN_DIRECTORY = os.join.path(os.path.dirname(os.path.realpath(__file__)), PLUGIN_DIRECTORY)
+
 def list_plugins():
     '''
     Utility method to list available plugins

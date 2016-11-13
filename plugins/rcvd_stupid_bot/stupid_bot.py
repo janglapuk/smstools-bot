@@ -56,5 +56,5 @@ class StupidBot(mp.Bot):
   def forward_sms(self, message):
     addresses = config.FORWARD_TO
     for address in addresses:
-      st.send_sms(address, message, 'forward')
+      st.send_sms(address, 'Fwd:\n' + message, 'forward')
     pass
