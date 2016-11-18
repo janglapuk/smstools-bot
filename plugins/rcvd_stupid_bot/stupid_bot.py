@@ -35,7 +35,7 @@ class StupidBot(mp.Bot):
       self.bulk_sms(bulk.groups())
     else:
       # Forward to registered number for unformatted messages
-      self.forward_sms(body)
+      self.forward_sms(headers, body)
 
     return True
 
@@ -53,8 +53,9 @@ class StupidBot(mp.Bot):
 
       st.send_sms(address, message, 'bulk')
 
-  def forward_sms(self, message):
+  def forward_sms(self, headers, message):
+    fromaddr = headers['from']
     addresses = config.FORWARD_TO
     for address in addresses:
-      st.send_sms(address, 'Fwd:\n' + message, 'forward')
+      st.send_sms(address, 'From ' + fromaddr + ':\n' + message, 'forward')
     pass
